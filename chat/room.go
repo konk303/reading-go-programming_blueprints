@@ -71,7 +71,10 @@ func (r *room) ServeHTTP(w http.ResponseWriter, req *http.Request) {
 		room:   r,
 	}
 	r.join <- client
-	defer func() { r.leave <- client }()
+	defer func() {
+		log.Println("closing", client)
+		r.leave <- client
+	}()
 	go client.write()
 	client.read()
 }
